@@ -2,21 +2,19 @@ import requests
 import base64
 import os
 from dotenv import load_dotenv
+import sys
 
 load_dotenv()
 
 # Fetch the access token from the environment
 access_token = os.getenv("ACCESS_TOKEN")
 organization = os.getenv("ORGANIZATION")
-repository = 'report-tutorial-project'
 readme_file = os.getenv("README_FILE")
 report_file = os.getenv("REPORT_FILE")
 base_url = os.getenv("BASE_URL")
-readme_url = f"{base_url}/repos/{organization}/{repository}/contents/README.md"
-report_url = f"{base_url}/repos/{organization}/{repository}/contents/report.pdf"
 
-def write_readme_to_github(access_token, url, file_path):
-
+def write_readme_to_github(access_token, repo, file_path):
+    url = f"{base_url}/repos/{organization}/{repo}/contents/{file_path}"
     # Headers for authentication
     headers = {
         "Authorization": f"Bearer {access_token}",
@@ -24,8 +22,12 @@ def write_readme_to_github(access_token, url, file_path):
     }
 
     # Read the content of the README file
-    with open(file_path, "rb") as file:
-        file_content = file.read()
+    if os.path.exists(file_path):
+        with open(file_path, "rb") as file:
+            file_content = file.read()
+    else:
+        print(f"File {file_path} does not exist.")
+        return
 
     # Create the request payload
     payload = {
@@ -51,5 +53,11 @@ def write_readme_to_github(access_token, url, file_path):
     else:
         print(f"Error occurred while writing {file_path}:", response.status_code)
 
-#write_readme_to_github(access_token, readme_url, readme_file)
-write_readme_to_github(access_token, report_url, report_file)
+#write_readme_to_github(access_token, repo, readme_file)
+#write_readme_to_github(access_token, report_url, report_file)
+if __name__ == "__main__":
+    if len(sys.argv) > 1:
+        repo = f'report-{sys.argv[1]}-project'
+        write_readme_to_github(access_token, repo, readme_file)
+    else:
+        print("No input value provided.")

@@ -22,20 +22,20 @@ def markdown_to_pdf(input_file, output_file):
     subprocess.run(['wkhtmltopdf', temp_html_file, output_file])
 
     # Remove the temporary HTML file
-    subprocess.run(['rm', temp_html_file])
+    #subprocess.run(['rm', temp_html_file])
 
 # Example usage
 input_file = 'head.md'      # Path to your Markdown file
 output_file = 'report.pdf'   # Path to the output PDF file
-markdown_to_pdf('head.md', output_file)
+#markdown_to_pdf('head.md', 'out.pdf')
 
 # Function to combine Markdown files by following these rules shown in the structure file
 def write_markdown_files(content, output_filename1, output_filename2):
     with open(output_filename1, 'w') as file1:
         file1.write(content)
 
-    with open(output_filename2, 'w') as file2:
-        file2.write(content)
+    # with open(output_filename2, 'w') as file2:
+    #     file2.write(content)
 
     #convert(output_filename1, output_filename2)
 
@@ -127,8 +127,8 @@ output_file1 = "README.md"
 output_file2 = "report.pdf"
 
 # Call the function to combine the files
-# content = generate_readme_content()
-# write_markdown_files(content, output_file1, output_file2)
+content = generate_readme_content()
+write_markdown_files(content, output_file1, output_file2)
 def markdown_to_html(input_file, out_file):
     with open(input_file, 'r') as md_file:
         md_content = md_file.read()
@@ -136,7 +136,7 @@ def markdown_to_html(input_file, out_file):
         with open(output_file, 'w') as html_file:
             html_file.write(html_content)
         #subprocess.call(['wkhtmltopdf', input_file, output_file])
-markdown_to_html('head.md', 'head.html')
+#markdown_to_html('head.md', 'head.html')
 #markdown_to_pdf('head.md', output_file)
 
 #markdown_to_pdf('head.md', output_file)
