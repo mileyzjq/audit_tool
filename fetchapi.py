@@ -28,7 +28,7 @@ def get_all_issues(owner, repo):
     return issue_list
 
 def generate_all_files(owner, repo_name):
-    repo = f'audit-{repo_name}-project'
+    repo = f'audit-{repo_name}'
     print(repo)
     issue_list = get_all_issues(owner, repo)
     for issue in issue_list:
@@ -43,24 +43,31 @@ def fetch_github_issue(owner, repo, issue_number):
         issue_title = response_json['title']
         issue_body = response_json['body']
         issue_labels = [label['name'] for label in response_json['labels']]
-        
-        if any(label in issue_labels for label in severity_lists):
+        count_ok = 0
+        is_issue_valid = False
+
+        for label in issue_labels:
+            if label == "invalid":
+                return None
+            if label in severity_lists:
+                is_issue_valid = True
+            if label.endswith("-ok"):
+                count_ok += 1
+
+        if is_issue_valid and count_ok == 2:
             generate_severity_issue_file(issue_number, issue_body, issue_labels)
 
-        return issue_title, issue_body, issue_labels
+        return issue_title
     
     return None
 
 def generate_severity_issue_file(issue_number, issue_body, issue_labels):
     severity = [label for label in issue_labels if label in severity_lists][0]
-    file_name = f"{issue_number}_findings_{severity}.md"
+    file_name = f"{issue_number}-finding-{severity}.md"
     with open(file_name, "w", encoding="utf-8") as file:
         file.write(issue_body)
     print(f"Content written to {file_name}")
 
-
-# Usage example
-#generate_all_files(owner, repo)
 
 if __name__ == "__main__":
     if len(sys.argv) > 1:
