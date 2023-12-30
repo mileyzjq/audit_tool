@@ -1,6 +1,7 @@
 import requests
 import base64
 import os
+from git import Repo
 from dotenv import load_dotenv
 import sys
 
@@ -9,12 +10,13 @@ load_dotenv()
 # Fetch the access token from the environment
 access_token = os.getenv("ACCESS_TOKEN")
 organization = os.getenv("ORGANIZATION")
-readme_file = os.getenv("README_FILE")
+readme_file = os.getenv("REPORT_MARKDOWN")
 report_file = os.getenv("REPORT_FILE")
 base_url = os.getenv("BASE_URL")
 
-def write_readme_to_github(access_token, repo, file_path):
+def write_files_to_github(access_token, repo, file_path):
     url = f"{base_url}/repos/{organization}/{repo}/contents/{file_path}"
+    print(url)
     # Headers for authentication
     headers = {
         "Authorization": f"Bearer {access_token}",
@@ -52,12 +54,16 @@ def write_readme_to_github(access_token, repo, file_path):
         print(f"{file_path} successfully written to GitHub repository.")
     else:
         print(f"Error occurred while writing {file_path}:", response.status_code)
+        print(f"Error occurred: ", response.json())
 
-#write_readme_to_github(access_token, repo, readme_file)
-#write_readme_to_github(access_token, report_url, report_file)
+
 if __name__ == "__main__":
     if len(sys.argv) > 1:
-        repo = f'report-{sys.argv[1]}'
-        write_readme_to_github(access_token, repo, readme_file)
+        # repo = f'report-{sys.argv[1]}'
+        repo = 'report-xwinner-platform-contracts'
+        #write_files_to_github(access_token, repo, readme_file)
+        #send_images_to_repo(repo, 'Picture1.png')
+        #write_files_to_github(access_token, repo, 'Picture1.png')
+        write_files_to_github(access_token, repo, 'README.pdf')
     else:
         print("No input value provided.")
