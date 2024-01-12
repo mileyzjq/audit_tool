@@ -1,6 +1,6 @@
-.PHONY: all a b c
+.PHONY: all a b c d
 
-all: a b c
+all: a b c d
 
 a:
 	@read -p "Enter input: " input; \
@@ -16,6 +16,9 @@ c:
     echo "Input: $$input"; \
 	python pushapi.py "$$input"
 
+d:
+	@echo "Convert markdown to pdf ..."
+	pandoc REPORT.md -V geometry:landscape -f markdown -o report.pdf
 
 clean:
 	@echo "Deleting all the markdown and pdf files ..."
